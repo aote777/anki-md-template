@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>初始anki-md模板稳定版</title>
+  </head>
+  <body>
+    <div class="md-content"># 测试基础语法</div>
+    <div class="md-content">[测试连接](http://baidu.com)</div>
+    <script>
+      'use strict'
+      function consoleLog(str) {
+        var div = document.createElement('div')
+        div.innerHTML = str
+        document.body.appendChild(div)
+      }
+      var jqueryCdn =
+        'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+      var showDownCdn =
+        'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js'
+      var highLightJs =
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js'
+      var highLightCss =
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
+
+      var createScript = (src) => {
+        var scriptElement = document.createElement('script')
+        scriptElement.src = src
+        scriptElement.type = 'text/javascript'
+        document.head.appendChild(scriptElement)
+        return new Promise((resolve) => {
+          scriptElement.onload = function () {
+            resolve(src)
+          }
+        })
+      }
+
+      var createLink = (url) => {
+        var linkElement = document.createElement('link')
+        linkElement.rel = 'stylesheet'
+        linkElement.href = url
+
+        linkElement.onload = () => {}
+
+        document.head.appendChild(linkElement)
+      }
+
+      var parseMarkDown = () => {
+        var convert = new showdown.Converter()
+        // convert.setFlavor('github')
+        document.querySelectorAll('div.md-content').forEach((div) => {
+          var text = div.innerText.replace(
+            /[\t\v\f \u00a0\u2000-\u200b\u2028-\u2029\u3000]/g,
+            ' '
+          )
+          var html = convert.makeHtml(text)
+          var newDiv = document.createElement('div')
+          newDiv.innerHTML = html
+          newDiv.querySelectorAll('code').forEach((code) => {
+            var hightlightHtml = hljs.highlightAuto(code.innerHTML).value
+            code.innerHTML = hightlightHtml
+          })
+          div.parentNode.insertBefore(newDiv, div.nextSibling)
+          div.style.display = 'none'
+        })
+      }
+      createLink(highLightCss)
+      createScript(showDownCdn)
+        .then(() => {
+          return createScript(highLightJs)
+        })
+        .then(() => {
+          parseMarkDown()
+        })
+    </script>
+  </body>
+</html>

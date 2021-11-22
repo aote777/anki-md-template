@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>anki-md模板测试</title>
+  </head>
+  <body>
+    <p><code>&lt;div&gt;xxxxx&lt;/div&gt;</code></p>
+    <pre>
+      <code>
+        &lt;head&gt;
+        &lt;meta charset="UTF-8" /&gt;
+        &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
+        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
+        &lt;title&gt;anki-md模板测试&lt;/title&gt;
+      &lt;/head&gt;
+      </code>
+    </pre>
+    <hr />
+    <textarea rows="100" cols="50" class="md-content">
+* 列表
+
+### 连接
+
+[url](http://baidu.com)
+
+\<div>html标签\</div>
+
+```
+  <meta charset="UTF-8" />
+  function(){
+    return new Promise((resolve)=>{
+      resolve(111)
+    })
+  }
+```
+
+| h1    |    h2   |      h3 |
+|:------|:-------:|--------:|
+| 100   | [a][1]  | ![b][2] |
+| *foo* | **bar** | ~~baz~~ |
+
+* 物品
++ 项目
+- 物品
+    </textarea>
+    <script>
+      'use strict'
+      function consoleLog(str) {
+        var div = document.createElement('div')
+        div.innerHTML = str
+        document.body.appendChild(div)
+      }
+      var jqueryCdn =
+        'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
+      var showDownCdn =
+        'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js'
+      var highLightJs =
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js'
+      var highLightCss =
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
+
+      var createScript = (src) => {
+        var scriptElement = document.createElement('script')
+        scriptElement.src = src
+        scriptElement.type = 'text/javascript'
+        document.head.appendChild(scriptElement)
+        return new Promise((resolve) => {
+          scriptElement.onload = function () {
+            resolve(src)
+          }
+        })
+      }
+
+      var createLink = (url) => {
+        var linkElement = document.createElement('link')
+        linkElement.rel = 'stylesheet'
+        linkElement.href = url
+
+        linkElement.onload = () => {}
+
+        document.head.appendChild(linkElement)
+      }
+
+      var parseMarkDown = () => {
+        var convert = new showdown.Converter({
+          // 启用对md中对图像尺寸的支持
+          // ![foo](foo.jpg =100x80)     simple, assumes units are in px
+          // ![bar](bar.jpg =100x*)      sets the height to "auto"
+          // ![baz](baz.jpg =80%x5em)  Image with width of 80% and height of 5em
+          parseImgDimensions: true,
+          // 启用对删除线的支持
+          strikethrough: true,
+          // 启用对表格语法的支持
+          tables: false,
+          // 启用checkbox的支持
+          tasklists: true,
+          // 尝试巧妙地修复与缩进代码中间与 es6 模板字符串相关的缩进问题
+          smartIndentationFix: true,
+          // 将换行符解析为 <br>，行尾不需要2个空格
+          simpleLineBreaks: true,
+          // 反斜杠转义html
+          backslashEscapesHTMLTags: true,
+          // 禁用将子列表缩进4个空格以使其嵌套的要求，有效地恢复到2或3个空格足够的旧行为
+          disableforced4spacesindentedsublist: true,
+          ghCodeBlocks: true,
+        })
+        convert.setFlavor('github')
+        document.querySelectorAll('.md-content').forEach((textarea) => {
+          var text = textarea.innerHTML
+          consoleLog('--------------------')
+          consoleLog(text)
+          var thisConverterSpecificOptions = convert.getOptions()
+          console.log('??配置项', thisConverterSpecificOptions)
+          console.log('textarea', textarea)
+          var html = convert.makeHtml(text)
+          console.log('最后出来的结果', html)
+          consoleLog(convert.makeHtml(html))
+          var newDiv = document.createElement('div')
+          newDiv.innerHTML = html
+          // newDiv.querySelectorAll('code').forEach((code) => {
+          //   var hightlightHtml = hljs.highlightAuto(code.innerHTML).value
+          //   code.innerHTML = hightlightHtml
+          // })
+          textarea.parentNode.insertBefore(newDiv, textarea.nextSibling)
+          textarea.style.display = 'none'
+        })
+      }
+      createLink(highLightCss)
+      createScript(showDownCdn)
+        .then(() => {
+          return createScript(highLightJs)
+        })
+        .then(() => {
+          window.onload = parseMarkDown
+          // parseMarkDown()
+        })
+    </script>
+  </body>
+</html>
