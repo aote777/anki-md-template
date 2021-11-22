@@ -13,8 +13,6 @@
         &lt;head&gt;
         &lt;meta charset="UTF-8" /&gt;
         &lt;meta http-equiv="X-UA-Compatible" content="IE=edge" /&gt;
-        &lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;
-        &lt;title&gt;anki-md模板测试&lt;/title&gt;
       &lt;/head&gt;
       </code>
     </pre>
@@ -26,9 +24,8 @@
 
 [url](http://baidu.com)
 
-\<div>html标签\</div>
-
 ```
+  <div>??--->>><<<</div>
   <meta charset="UTF-8" />
   function(){
     return new Promise((resolve)=>{
@@ -113,8 +110,6 @@
           consoleLog('--------------------')
           consoleLog(text)
           var thisConverterSpecificOptions = convert.getOptions()
-          console.log('??配置项', thisConverterSpecificOptions)
-          console.log('textarea', textarea)
           var html = convert.makeHtml(text)
           console.log('最后出来的结果', html)
           consoleLog(convert.makeHtml(html))
