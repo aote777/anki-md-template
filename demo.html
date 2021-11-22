@@ -119,8 +119,6 @@ function(){
         convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea) => {
           var text = textarea.innerHTML
-          consoleLog('--------------------')
-          consoleLog(text)
           var thisConverterSpecificOptions = convert.getOptions()
           var html = convert.makeHtml(text)
           console.log('最后出来的结果', html)
@@ -141,8 +139,8 @@ function(){
           return createScript(highLightJs)
         })
         .then(() => {
-          window.onload = parseMarkDown
-          // parseMarkDown()
+          // window.onload = parseMarkDown
+          parseMarkDown()
         })
     </script>
   </body>
