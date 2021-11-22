@@ -7,13 +7,6 @@
     <title>anki-md模板测试</title>
   </head>
   <body>
-    <div class="md-content">
-      ```
-      <div>??--->>><<<</div>
-      <meta charset="UTF-8" />
-      function(){ return new Promise((resolve)=>{ resolve(111) }) } 
-      ```
-    </div>
     <textarea rows="30" cols="50" class="md-content">
     ```
       <div>??--->>><<<</div>
@@ -86,10 +79,10 @@
           disableforced4spacesindentedsublist: true,
           ghCodeBlocks: true,
         })
-        convert.setFlavor('github')
+        // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea) => {
           console.log('查找到的textarea元素', textarea)
-          var text = textarea.innerHTML
+          var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
           var html = convert.makeHtml(text)
           var newDiv = document.createElement('div')
