@@ -8,7 +8,6 @@
   </head>
   <body>
     <textarea class="md-content">
-
 * 哈哈
 
 - [x] ??
@@ -17,6 +16,16 @@
 
 [xx](http://baidu.com)
 
+```
+function consoleLog(str) {
+  var div = document.createElement('div')
+  div.innerHTML = str
+  document.body.appendChild(div)
+  ()=>{
+    console.log('//????///????')
+  }
+}
+```
 </textarea
     >
 
@@ -75,6 +84,12 @@
         document.head.appendChild(linkElement)
       }
 
+      // 清除br标签
+      // anki自动生成的全部干掉 严格按照原生来写
+      var clearBR=(str)=>{
+        return str.replace(/<br>/g,"\r\n")
+      }
+
       // 解析（入口方法）
       var parseMarkDown = () => {
         var convert = new showdown.Converter({
@@ -92,12 +107,12 @@
           // 尝试巧妙地修复与缩进代码中间与 es6 模板字符串相关的缩进问题
           // smartIndentationFix: true,
           // 将换行符解析为 <br>，行尾不需要2个空格
-          simpleLineBreaks: false,
+          // simpleLineBreaks: false,
           // 反斜杠转义html
-          backslashEscapesHTMLTags: true,
+          // backslashEscapesHTMLTags: true,
           // 禁用将子列表缩进4个空格以使其嵌套的要求，有效地恢复到2或3个空格足够的旧行为
-          disableforced4spacesindentedsublist: true,
-          ghCodeBlocks: true,
+          // disableforced4spacesindentedsublist: true,
+          // ghCodeBlocks: true,
         })
         // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea, index) => {
@@ -105,6 +120,9 @@
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
+          // 清除br标签试试
+          text=clearBR(text)
+          // 👇关键核心md转换
           var html = convert.makeHtml(text)
           var newDiv = document.createElement('div')
           var hr = document.createElement('hr')
@@ -127,6 +145,9 @@
         .then(() => {
           // anki模板无法使用window.onload我怀疑是被占用了
           // window.onload = parseMarkDown
+
+          // 可以尝试手动清除anki生成的<br>
+
           parseMarkDown()
           return new Promise((resolve) => {
             resolve()
