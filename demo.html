@@ -9,7 +9,12 @@
   <body>
     <textarea class="md-content">
       # 你好
+
       * 哈哈
+
+      - [] true
+
+      - [] true
     </textarea>
     <textarea class="md-content">
     ```
@@ -110,6 +115,7 @@
           return createScript(highLightJs)
         })
         .then(() => {
+          // anki模板无法使用window.onload我怀疑是被占用了
           // window.onload = parseMarkDown
           parseMarkDown()
           return new Promise((resolve) => {
