@@ -10,13 +10,8 @@
     <textarea class="md-content">
       # 你好
       * 哈哈
-
-      | h1    |    h2   |      h3 |
-      |:------|:-------:|--------:|
-      | 100   | [a][1]  | ![b][2] |
-      | *foo* | **bar** | ~~baz~~ |
     </textarea>
-    <textarea rows="30" cols="50" class="md-content">
+    <textarea class="md-content">
     ```
       <div>??--->>><<<</div>
       <meta charset="UTF-8" />
@@ -28,6 +23,11 @@
       let a=88888
       const b=999
     ```
+
+      | h1    |    h2   |      h3 |
+      |:------|:-------:|--------:|
+      | 100   | [a][1]  | ![b][2] |
+      | *foo* | **bar** | ~~baz~~ |
     </textarea>
     <script>
       'use strict'
@@ -90,11 +90,12 @@
           disableforced4spacesindentedsublist: true,
           ghCodeBlocks: true,
         })
-        // convert.setFlavor('github')
+        convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea) => {
           // console.log('查找到的textarea元素', textarea)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
+          console.log('thisConverterSpecificOptions',thisConverterSpecificOptions)
           var html = convert.makeHtml(text)
           var newDiv = document.createElement('div')
           newDiv.innerHTML = html
