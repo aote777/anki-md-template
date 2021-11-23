@@ -112,7 +112,7 @@ function consoleLog(str) {
       // anki自动生成的全部干掉 严格按照原生来写
       var clearBR = (str) => {
         str=str.replace(/<br>/g, '\r\n')
-        str=str.replace(/nbsp;/g, ' ')
+        str=str.replace(/&nbsp;/g, ' ')
         return str
       }
 
