@@ -10,6 +10,11 @@
     <textarea class="md-content">
       # 你好
       * 哈哈
+
+      | h1    |    h2   |      h3 |
+      |:------|:-------:|--------:|
+      | 100   | [a][1]  | ![b][2] |
+      | *foo* | **bar** | ~~baz~~ |
     </textarea>
     <textarea rows="30" cols="50" class="md-content">
     ```
@@ -20,6 +25,8 @@
           resolve(111)
         })
       }
+      let a=88888
+      const b=999
     ```
     </textarea>
     <script>
@@ -70,7 +77,7 @@
           // 启用对删除线的支持
           strikethrough: true,
           // 启用对表格语法的支持
-          tables: false,
+          tables: true,
           // 启用checkbox的支持
           tasklists: true,
           // 尝试巧妙地修复与缩进代码中间与 es6 模板字符串相关的缩进问题
@@ -85,16 +92,13 @@
         })
         // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea) => {
-          console.log('查找到的textarea元素', textarea)
+          // console.log('查找到的textarea元素', textarea)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
           var html = convert.makeHtml(text)
           var newDiv = document.createElement('div')
           newDiv.innerHTML = html
-          // newDiv.querySelectorAll('code').forEach((code) => {
-          //   var hightlightHtml = hljs.highlightAuto(code.innerHTML).value
-          //   code.innerHTML = hightlightHtml
-          // })
+          // 高亮一下代码
           textarea.parentNode.insertBefore(newDiv, textarea.nextSibling)
           textarea.style.display = 'none'
         })
@@ -107,6 +111,12 @@
         .then(() => {
           // window.onload = parseMarkDown
           parseMarkDown()
+          return new Promise((resolve) => {
+            resolve()
+          })
+        })
+        .then(() => {
+          hljs.initHighlightingOnLoad()
         })
     </script>
   </body>
