@@ -15,7 +15,7 @@
       margin: 0 auto;
       padding: 45px;
     }
-  
+
     @media (max-width: 767px) {
       .markdown-body {
         padding: 15px;
@@ -23,7 +23,7 @@
     }
   </style>
   <body>
-<textarea class="md-content">
+    <textarea class="md-content">
 * 哈哈
 
 - [x] ??
@@ -33,19 +33,16 @@
 [百度](http://baidu.com)
 
 ```
-function consoleLog(str) {
-  var div = document.createElement('div')
-  div.innerHTML = str
-  document.body.appendChild(div)
-  ()=>{
-    console.log('//????///????')
-  }
-}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ```
 </textarea
     >
 
-<textarea class="md-content">
+    <textarea class="md-content">
 * 序列
 
 - zhe这都出来了
@@ -109,11 +106,15 @@ function consoleLog(str) {
       }
 
       // 清除br标签
-      // anki自动生成的全部干掉 严格按照原生来写
+      // anki自动生成的<br>全部干掉 严格按照原生换行来写
       var clearBR = (str) => {
-        str=str.replace(/<br>/g, '\r\n')
-        str=str.replace(/&nbsp;/g, ' ')
+        str = str.replace(/<br>/g, '\r\n')
         return str
+      }
+
+      var clearSpaceNbsp=(str)=>{
+        str = str.replace(/&nbsp;/g, '+')
+        return
       }
 
       // 解析（入口方法）
@@ -144,6 +145,7 @@ function consoleLog(str) {
         // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea, index) => {
           console.log('查找到的textarea元素', textarea)
+          textarea.innerHTML=clearSpaceNbsp(textarea.innerHTML)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
