@@ -111,7 +111,9 @@ function consoleLog(str) {
       // 清除br标签
       // anki自动生成的全部干掉 严格按照原生来写
       var clearBR = (str) => {
-        return str.replace(/<br>/g, '\r\n')
+        str=str.replace(/<br>/g, '\r\n')
+        str=str.replace(/nbsp;/g, ' ')
+        return str
       }
 
       // 解析（入口方法）
