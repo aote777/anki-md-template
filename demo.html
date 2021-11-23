@@ -14,6 +14,9 @@
 - [x] ??
 
 - [] 22
+
+[xx](http://baidu.com)
+
 </textarea>
 <textarea class="md-content">
 ```
@@ -106,6 +109,7 @@ var createScript = (src) => {
           index === 0 ? document.body.appendChild(hr) : null
           textarea.className = `x-${index}`
           textarea.style.display = 'none'
+          // 不能从body直接插入元素 anki 不刷新的 淦
         })
       }
       createLink(highLightCss)
