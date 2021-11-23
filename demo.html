@@ -100,11 +100,10 @@
           // console.log('查找到的textarea元素', textarea)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
-          console.log('thisConverterSpecificOptions',thisConverterSpecificOptions)
+          console.log('当前的配置项',thisConverterSpecificOptions)
           var html = convert.makeHtml(text)
           var newDiv = document.createElement('div')
           newDiv.innerHTML = html
-          // 高亮一下代码
           textarea.parentNode.insertBefore(newDiv, textarea.nextSibling)
           textarea.style.display = 'none'
         })
@@ -123,7 +122,8 @@
           })
         })
         .then(() => {
-          hljs.initHighlightingOnLoad()
+          hljs.highlightAll()
+          // hljs.initHighlightingOnLoad()
         })
     </script>
   </body>
