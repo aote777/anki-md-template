@@ -12,25 +12,26 @@
 
       * 哈哈
 
-      - [] true
+      - [x] true
 
       - [] true
     </textarea>
     <textarea class="md-content">
     
-    ```
-    var createScript = (src) => {
-      var scriptElement = document.createElement('script')
-      scriptElement.src = src
-      scriptElement.type = 'text/javascript'
-      document.head.appendChild(scriptElement)
-      return new Promise((resolve) => {
-        scriptElement.onload = function () {
-          resolve(src)
-        }
-      })
+```
+var createScript = (src) => {
+
+  var scriptElement = document.createElement('script')
+  scriptElement.src = src
+  scriptElement.type = 'text/javascript'
+  document.head.appendChild(scriptElement)
+  return new Promise((resolve) => {
+    scriptElement.onload = function () {
+      resolve(src)
     }
-    ```
+  })
+}
+```
 
       | h1    |    h2   |      h3 |
       |:------|:-------:|--------:|
@@ -99,15 +100,19 @@
           ghCodeBlocks: true,
         })
         convert.setFlavor('github')
-        document.querySelectorAll('.md-content').forEach((textarea) => {
+        document.querySelectorAll('.md-content').forEach((textarea, index) => {
           // console.log('查找到的textarea元素', textarea)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
-          console.log('当前的配置项',thisConverterSpecificOptions)
+          console.log('当前的配置项', thisConverterSpecificOptions)
           var html = convert.makeHtml(text)
           var newDiv = document.createElement('div')
           newDiv.innerHTML = html
-          textarea.parentNode.insertBefore(newDiv, textarea.nextSibling)
+          // textarea.parentNode.insertBefore(newDiv, textarea.nextSibling)
+          document.body.appendChild(newDiv)
+          var hr = document.createElement('hr')
+          index === 0 ? document.body.appendChild(hr) : null
+          textarea.className = 'x'
           textarea.style.display = 'none'
         })
       }
