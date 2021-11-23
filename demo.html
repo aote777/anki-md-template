@@ -85,7 +85,7 @@ var createScript = (src) => {
           // 尝试巧妙地修复与缩进代码中间与 es6 模板字符串相关的缩进问题
           // smartIndentationFix: true,
           // 将换行符解析为 <br>，行尾不需要2个空格
-          // simpleLineBreaks: true,
+          simpleLineBreaks: false,
           // 反斜杠转义html
           backslashEscapesHTMLTags: true,
           // 禁用将子列表缩进4个空格以使其嵌套的要求，有效地恢复到2或3个空格足够的旧行为
@@ -105,7 +105,7 @@ var createScript = (src) => {
           document.body.appendChild(newDiv)
           var hr = document.createElement('hr')
           index === 0 ? document.body.appendChild(hr) : null
-          textarea.className = 'x'
+          textarea.className = `x-${index}`
           textarea.style.display = 'none'
         })
       }
@@ -124,7 +124,19 @@ var createScript = (src) => {
         })
         .then(() => {
           hljs.highlightAll()
-          // hljs.initHighlightingOnLoad()
+          return new Promise((resolve)=>{
+            resolve()
+          })
+        })
+        .then(()=>{
+          // 清除重复项
+          var repeatEl =document.querySelectorAll('.x-0')
+          repeatEl.forEach((el,i)=>{
+            if(i===repeatEl.length-1){
+              return
+            }
+            document.body.removeChild(el)
+          })
         })
     </script>
   </body>
