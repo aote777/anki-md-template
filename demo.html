@@ -41,7 +41,8 @@ function consoleLog(str) {
 | ni | wo |
 | :--:|:--:|
 | 1|2|
-</textarea>
+</textarea
+    >
     <script>
       'use strict'
       function consoleLog(str) {
@@ -58,7 +59,8 @@ function consoleLog(str) {
       var highLightCss =
         // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
         'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/base16/onedark.min.css'
-
+      var githubMarkdownCss =
+        'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.0.0/github-markdown.min.css'
       // 加载库文件
       var createScript = (src) => {
         var scriptElement = document.createElement('script')
@@ -85,8 +87,8 @@ function consoleLog(str) {
 
       // 清除br标签
       // anki自动生成的全部干掉 严格按照原生来写
-      var clearBR=(str)=>{
-        return str.replace(/<br>/g,"\r\n")
+      var clearBR = (str) => {
+        return str.replace(/<br>/g, '\r\n')
       }
 
       // 解析（入口方法）
@@ -120,7 +122,7 @@ function consoleLog(str) {
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
           // 清除br标签试试
-          text=clearBR(text)
+          text = clearBR(text)
           // 👇关键核心md转换
           var html = convert.makeHtml(text)
           var newDiv = document.createElement('div')
@@ -137,6 +139,7 @@ function consoleLog(str) {
         })
       }
       createLink(highLightCss)
+      createLink(githubMarkdownCss)
       createScript(showDownCdn)
         .then(() => {
           return createScript(highLightJs)
