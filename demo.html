@@ -6,6 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>anki-md模板测试</title>
   </head>
+  <!-- <style>
+    .markdown-body {
+      box-sizing: border-box;
+      min-width: 200px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 45px;
+    }
+  
+    @media (max-width: 767px) {
+      .markdown-body {
+        padding: 15px;
+      }
+    }
+  </style> -->
   <body>
     <textarea class="md-content">
 * 哈哈
@@ -128,6 +143,7 @@ function consoleLog(str) {
           var newDiv = document.createElement('div')
           var hr = document.createElement('hr')
           newDiv.innerHTML = html
+          newDiv.className = 'markdown-body'
           textarea.parentNode.insertBefore(newDiv, textarea.nextSibling)
 
           index === 1
@@ -138,8 +154,9 @@ function consoleLog(str) {
           // 不能从body直接插入元素 anki 不刷新的 淦
         })
       }
-      createLink(highLightCss)
       createLink(githubMarkdownCss)
+      createLink(highLightCss)
+
       createScript(showDownCdn)
         .then(() => {
           return createScript(highLightJs)
@@ -156,6 +173,7 @@ function consoleLog(str) {
           })
         })
         .then(() => {
+          // 自动代码高亮
           hljs.highlightAll()
           return new Promise((resolve) => {
             resolve()
