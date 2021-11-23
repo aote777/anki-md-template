@@ -112,11 +112,10 @@
         return str
       }
 
-      var clearSpaceNbsp=(str)=>{
-        str = str.replace(/&nbsp;/g, '+')
-        return
+      var clearBlankNbsp=(str)=>{
+        str = str.replace(/&nbsp;/g, ' ')
+        return str
       }
-
       // 解析（入口方法）
       var parseMarkDown = () => {
         var convert = new showdown.Converter({
@@ -145,7 +144,7 @@
         // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea, index) => {
           console.log('查找到的textarea元素', textarea)
-          textarea.innerHTML=clearSpaceNbsp(textarea.innerHTML)
+          textarea.innerHTML=clearBlankNbsp(textarea.innerHTML)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
