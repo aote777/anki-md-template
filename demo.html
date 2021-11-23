@@ -18,14 +18,18 @@
     </textarea>
     <textarea class="md-content">
     
-    ```plaintext
-      function(){
-        return new Promise((resolve)=>{
-          resolve(111)
-        })
-      }
-      let a=88888
-      const b=999
+    ```
+    var createScript = (src) => {
+      var scriptElement = document.createElement('script')
+      scriptElement.src = src
+      scriptElement.type = 'text/javascript'
+      document.head.appendChild(scriptElement)
+      return new Promise((resolve) => {
+        scriptElement.onload = function () {
+          resolve(src)
+        }
+      })
+    }
     ```
 
       | h1    |    h2   |      h3 |
@@ -47,8 +51,8 @@
       var highLightJs =
         'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js'
       var highLightCss =
-        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
-
+        // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
+        'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/base16/onedark.min.css'
       var createScript = (src) => {
         var scriptElement = document.createElement('script')
         scriptElement.src = src
