@@ -114,7 +114,7 @@ function consoleLog(str) {
           // disableforced4spacesindentedsublist: true,
           ghCodeBlocks: true,
         })
-        // convert.setFlavor('github')
+        convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea, index) => {
           console.log('查找到的textarea元素', textarea)
           var text = textarea.value
