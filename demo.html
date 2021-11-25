@@ -65,16 +65,16 @@ function consoleLog(str) {
         div.innerHTML = str
         document.body.appendChild(div)
       }
-      var jqueryCdn =
+      var JQ_CDN =
         'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
-      var showDownCdn =
+      var SHOWDOWN_CDN =
         'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js'
-      var highLightJs =
+      var HIGHLIGHT_JS_CDN =
         'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js'
-      var highLightCss =
+      var HIGHLIGHT_CSS_CDN =
         // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
         'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/base16/onedark.min.css'
-      var githubMarkdownCss =
+      var GITHUB_MARKDOWN_CSS_CDN =
         'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.0.0/github-markdown.min.css'
       // 加载库文件
       var createScript = (src) => {
@@ -156,12 +156,12 @@ function consoleLog(str) {
           // 不能从body直接插入元素 anki 不刷新的 淦
         })
       }
-      createLink(githubMarkdownCss)
-      createLink(highLightCss)
+      createLink(GITHUB_MARKDOWN_CSS_CDN)
+      createLink(HIGHLIGHT_CSS_CDN)
 
-      createScript(showDownCdn)
+      createScript(SHOWDOWN_CDN)
         .then(() => {
-          return createScript(highLightJs)
+          return createScript(HIGHLIGHT_JS_CDN)
         })
         .then(() => {
           // anki模板无法使用window.onload我怀疑是被占用了
