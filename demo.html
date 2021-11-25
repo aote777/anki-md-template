@@ -7,6 +7,7 @@
     <title>anki-md模板测试</title>
   </head>
   <style>
+    /* 这个需要复制到anki的css样式的那个窗口里 */
     .markdown-body {
       box-sizing: border-box;
       min-width: 200px;
@@ -14,7 +15,7 @@
       margin: 0 auto;
       padding: 45px;
     }
-  
+
     @media (max-width: 767px) {
       .markdown-body {
         padding: 15px;
@@ -27,19 +28,16 @@
 
 - [x] ??
 
-- [] 22
+- [ ] 22
 
-[xx](http://baidu.com)
+[百度](http://baidu.com)
 
 ```
-function consoleLog(str) {
-  var div = document.createElement('div')
-  div.innerHTML = str
-  document.body.appendChild(div)
-  ()=>{
-    console.log('//????///????')
-  }
-}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 ```
 </textarea
     >
@@ -49,13 +47,20 @@ function consoleLog(str) {
 
 - zhe这都出来了
 
-* 试试
++ 试试
 
 > 引入的话话里有话
 
 | ni | wo |
 | :--:|:--:|
 | 1|2|
+
+* base64图片测试
+
+![图片测试][img1]
+
+
+[img1]:data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAA/AHYDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDr6KKXaaAEopdpo2mgBKKXaaQjFABRUczEKNpIyew9qhV5c/Mzjnjj/wCxoAtUVVMzqznPQdChx7VIJW2kjLnPPykY/TNAE1FV0mkJI2559xj9KsUAFFFFABRRRQAU8dBTKeOgoArahdPa22+KPzZWIVFzgEn1NYukzahY3RS9g/dXMv3vM3FWPTueK2NSjD2+4kAIdxyccVnWpguLiNYZVZhhvvdvWobaZSSsblNbrT6Y3WrJGOu4r6DmoRb7MbcHjBJwP5CrFFAFf7MNxOFHv3PrUnl5BznqSMMRUlFAEKQ4yW3Ak54c1NRRQAUUUUAFFFFABQZo0IVmwf5UUx4I5DuPBIwSDik79ARRe8jupj5Tq6KdvBz9ajitre1DGGNU3HJxUlposNnu8uQkscsTzk/nVp7MMMeZj8KYCW17E4ZDKpkjOGAOT7VZJBwR0xVC30mO3klZJmxKdzLjvV0KqKFToKWo9BaoakoYruUHEbkZ9eKtzxmSPCsVIOeCRn24rPkkkmTzFBIWN1w33skjgj8DWNZ+60zSmtblq4uY/KPkzpvLKPlIJ6gH+tWEzsXJycDJ9axpLpZXkCK3zoAo2n73r/KtlPuL9KKc+eTCceVDqKKK3MgooooAKKKKACiiigAooooAKKKKACqzWg84yRts3csMZyfWrNFTKKkrMabWxVFoQzMJMFv9n/69WI1KRorNuKgAnGM06ilGEY7Dcm9woooqyQooooAKKKKAP//Z
 </textarea
     >
     <script>
@@ -101,11 +106,16 @@ function consoleLog(str) {
       }
 
       // 清除br标签
-      // anki自动生成的全部干掉 严格按照原生来写
+      // anki自动生成的<br>全部干掉 严格按照原生换行来写
       var clearBR = (str) => {
-        return str.replace(/<br>/g, '\r\n')
+        str = str.replace(/<br>/g, '\r\n')
+        return str
       }
 
+      var clearBlankNbsp=(str)=>{
+        str = str.replace(/&nbsp;/g, ' ')
+        return str
+      }
       // 解析（入口方法）
       var parseMarkDown = () => {
         var convert = new showdown.Converter({
@@ -134,6 +144,7 @@ function consoleLog(str) {
         // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea, index) => {
           console.log('查找到的textarea元素', textarea)
+          textarea.innerHTML=clearBlankNbsp(textarea.innerHTML)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
