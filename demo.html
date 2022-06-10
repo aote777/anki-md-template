@@ -182,20 +182,12 @@
         .then(() => {
           // anki模板无法使用window.onload我怀疑是被占用了
           // window.onload = parseMarkDown
-
           // 可以尝试手动清除anki生成的<br>
-
           parseMarkDown()
-          return new Promise((resolve) => {
-            resolve()
-          })
         })
         .then(() => {
           // 自动代码高亮
           hljs.highlightAll()
-          return new Promise((resolve) => {
-            resolve()
-          })
         })
         .then(() => {
           // 清除重复项 试试
