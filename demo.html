@@ -23,46 +23,12 @@
     }
   </style>
   <body>
-    <textarea class="md-content">
-* 哈哈
-
-- [x] ??
-
-- [ ] 22
-
-[百度](http://baidu.com)
-
-```
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-```
-</textarea
-    >
-
-    <textarea class="md-content">
-* 序列
-
-- zhe这都出来了
-
-+ 试试
-
-> 引入的话话里有话
-
-| ni | wo |
-| :--:|:--:|
-| 1|2|
-
-* base64图片测试
-
-![图片测试][img1]
-
-
-[img1]:data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABQODxIPDRQSEBIXFRQYHjIhHhwcHj0sLiQySUBMS0dARkVQWnNiUFVtVkVGZIhlbXd7gYKBTmCNl4x9lnN+gXz/2wBDARUXFx4aHjshITt8U0ZTfHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHx8fHz/wAARCAA/AHYDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDr6KKXaaAEopdpo2mgBKKXaaQjFABRUczEKNpIyew9qhV5c/Mzjnjj/wCxoAtUVVMzqznPQdChx7VIJW2kjLnPPykY/TNAE1FV0mkJI2559xj9KsUAFFFFABRRRQAU8dBTKeOgoArahdPa22+KPzZWIVFzgEn1NYukzahY3RS9g/dXMv3vM3FWPTueK2NSjD2+4kAIdxyccVnWpguLiNYZVZhhvvdvWobaZSSsblNbrT6Y3WrJGOu4r6DmoRb7MbcHjBJwP5CrFFAFf7MNxOFHv3PrUnl5BznqSMMRUlFAEKQ4yW3Ak54c1NRRQAUUUUAFFFFABQZo0IVmwf5UUx4I5DuPBIwSDik79ARRe8jupj5Tq6KdvBz9ajitre1DGGNU3HJxUlposNnu8uQkscsTzk/nVp7MMMeZj8KYCW17E4ZDKpkjOGAOT7VZJBwR0xVC30mO3klZJmxKdzLjvV0KqKFToKWo9BaoakoYruUHEbkZ9eKtzxmSPCsVIOeCRn24rPkkkmTzFBIWN1w33skjgj8DWNZ+60zSmtblq4uY/KPkzpvLKPlIJ6gH+tWEzsXJycDJ9axpLpZXkCK3zoAo2n73r/KtlPuL9KKc+eTCceVDqKKK3MgooooAKKKKACiiigAooooAKKKKACqzWg84yRts3csMZyfWrNFTKKkrMabWxVFoQzMJMFv9n/69WI1KRorNuKgAnGM06ilGEY7Dcm9woooqyQooooAKKKKAP//Z
-</textarea
-    >
+    <textarea id="test" class="md-content">
+      When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
+      只有这个是正常的
+      $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+    </textarea>
+    <textarea class="md-content"> </textarea>
     <script>
       'use strict'
       function consoleLog(str) {
@@ -79,6 +45,9 @@
       var HIGHLIGHT_JS_CDN =
         // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js'
         'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js'
+      var es6CDN = 'https://polyfill.io/v3/polyfill.min.js?features=es6'
+      var MATHJAX_CDN =
+        'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/3.2.0/es5/tex-chtml-full.js'
       var HIGHLIGHT_CSS_CDN =
         // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
         // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/base16/onedark.min.css'
@@ -86,10 +55,12 @@
       var GITHUB_MARKDOWN_CSS_CDN =
         // 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.0.0/github-markdown.min.css'
         'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/github-markdown-css/5.1.0/github-markdown-dark.min.css'
+
       // 加载库文件
       var createScript = (src) => {
         var scriptElement = document.createElement('script')
         scriptElement.src = src
+        scriptElement.async = true
         scriptElement.type = 'text/javascript'
         document.head.appendChild(scriptElement)
         return new Promise((resolve) => {
@@ -104,9 +75,7 @@
         var linkElement = document.createElement('link')
         linkElement.rel = 'stylesheet'
         linkElement.href = url
-
         linkElement.onload = () => {}
-
         document.head.appendChild(linkElement)
       }
 
@@ -117,7 +86,7 @@
         return str
       }
 
-      var clearBlankNbsp=(str)=>{
+      var clearBlankNbsp = (str) => {
         str = str.replace(/&nbsp;/g, ' ')
         return str
       }
@@ -149,11 +118,11 @@
         // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((textarea, index) => {
           console.log('查找到的textarea元素', textarea)
-          textarea.innerHTML=clearBlankNbsp(textarea.innerHTML)
+          textarea.innerHTML = clearBlankNbsp(textarea.innerHTML)
           var text = textarea.value
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
-          // 清除br标签试试
+          // 清除br标签
           text = clearBR(text)
           // 👇关键核心md转换
           var html = convert.makeHtml(text)
@@ -174,6 +143,13 @@
       }
       createLink(GITHUB_MARKDOWN_CSS_CDN)
       createLink(HIGHLIGHT_CSS_CDN)
+
+      function texToHtml(texString) {
+        // 使用MathJax的tex2chtml函数将TeX字符串转换为HTML节点
+        const node = MathJax.tex2chtml(texString)
+        // 返回HTML字符串
+        return node.outerHTML
+      }
 
       createScript(SHOWDOWN_CDN)
         .then(() => {
@@ -198,6 +174,9 @@
             }
             document.body.removeChild(el)
           })
+        })
+        .then(() => {
+          createScript(MATHJAX_CDN)
         })
     </script>
   </body>
