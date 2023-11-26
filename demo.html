@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cn">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -23,37 +23,36 @@
     }
   </style>
   <body>
-    <textarea id="test" class="md-content">
-      When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they are
-      只有这个是正常的
-      $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
-    </textarea>
-    <textarea class="md-content"> </textarea>
+    <br />\[x = {-b \pm \sqrt{b^2-4ac} \over 2a}\]<br />
+    <div id="test" class="md-content">
+      When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they
+      are 只有这个是正常的 $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+    </div>
+    <div class="md-content">
+      * 呵呵 
+      # 我看你真是老糊涂了
+    </div>
     <script>
       'use strict'
+      // 在anki中查看调试信息
       function consoleLog(str) {
         var div = document.createElement('div')
         div.innerHTML = str
         document.body.appendChild(div)
       }
-      // anki中 不可以使用let/const
+
       var JQ_CDN =
         'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
       var SHOWDOWN_CDN =
-        // 'https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js'
         'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/showdown/2.0.0/showdown.min.js'
       var HIGHLIGHT_JS_CDN =
-        // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js'
         'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js'
       var es6CDN = 'https://polyfill.io/v3/polyfill.min.js?features=es6'
       var MATHJAX_CDN =
         'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/3.2.0/es5/tex-chtml-full.js'
       var HIGHLIGHT_CSS_CDN =
-        // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css'
-        // 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/base16/onedark.min.css'
         'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/styles/base16/onedark.min.css'
       var GITHUB_MARKDOWN_CSS_CDN =
-        // 'https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.0.0/github-markdown.min.css'
         'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/github-markdown-css/5.1.0/github-markdown-dark.min.css'
 
       // 加载库文件
@@ -116,10 +115,11 @@
         })
         // 好像是失效的？？不管用呢
         // convert.setFlavor('github')
-        document.querySelectorAll('.md-content').forEach((textarea, index) => {
-          console.log('查找到的textarea元素', textarea)
-          textarea.innerHTML = clearBlankNbsp(textarea.innerHTML)
-          var text = textarea.value
+        document.querySelectorAll('.md-content').forEach((div, index) => {
+          console.log('查找到的容器元素', div)
+          div.innerHTML = clearBlankNbsp(div.innerHTML)
+          var text = div.innerHTML
+          console.log('text', text)
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
           // 清除br标签
@@ -131,13 +131,13 @@
           newDiv.innerHTML = html
           // 激活github-markdown-css
           newDiv.className = 'markdown-body'
-          textarea.parentNode.insertBefore(newDiv, textarea.nextSibling)
+          div.parentNode.insertBefore(newDiv, div.nextSibling)
 
           index === 1
-            ? textarea.parentNode.insertBefore(hr, textarea.nextSibling)
+            ? div.parentNode.insertBefore(hr, div.nextSibling)
             : null
-          textarea.className = `x-${index}`
-          textarea.style.display = 'none'
+          div.className = `x-${index}`
+          div.style.display = 'none'
           // 不能从body直接插入元素 anki 不刷新的 淦
         })
       }
@@ -150,7 +150,6 @@
         // 返回HTML字符串
         return node.outerHTML
       }
-
       createScript(SHOWDOWN_CDN)
         .then(() => {
           return createScript(HIGHLIGHT_JS_CDN)
@@ -174,9 +173,6 @@
             }
             document.body.removeChild(el)
           })
-        })
-        .then(() => {
-          createScript(MATHJAX_CDN)
         })
     </script>
   </body>
