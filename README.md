@@ -12,7 +12,7 @@
 
 - [x] 全部样式风格采用`github-markdown-css` css样式文件修改成自动识别系统主题（是否是暗黑模式） 以前的版本可以修改一下 cdn地址
 
-- [x] 编辑只需严格按照markdown语法编写,不需要输入任何html标签（需要showdown支持，有一些配置项我可能没开），如果想配置html自己去那个anki html编辑器里改就行。但我不建议改。
+- [x] 编辑只需严格按照markdown语法编写,不需要输入任何html标签（需要showdown.js支持，有一些配置项我可能没开），如果想配置html自己去那个anki html编辑器里改就行。但我不建议改。
 
 - [x] 应issues的要求 加入了 对 anki mathJax 的兼容 (就是点他anki自带的编辑器的那个 fx的图标)
 
