@@ -21,12 +21,12 @@
         padding: 15px;
       }
     }
-	
-	/* 初始状态下设置透明度为0 */
-	  .md-content {
-		opacity: 0;
-		transition: opacity 0.3s ease-in-out;
-	  }
+
+    /* 初始状态下设置透明度为0 */
+    .md-content {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
   </style>
   <body>
     <br />\[x = {-b \pm \sqrt{b^2-4ac} \over 2a}\]<br />
@@ -34,10 +34,7 @@
       When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they
       are 只有这个是正常的 $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
     </div>
-    <div class="md-content">
-      * 呵呵 
-      # 我看你真是老糊涂了
-    </div>
+    <div class="md-content">* 呵呵 # 我看你真是老糊涂了</div>
     <script>
       'use strict'
       // 在anki中查看调试信息
@@ -139,9 +136,7 @@
           newDiv.className = 'markdown-body'
           div.parentNode.insertBefore(newDiv, div.nextSibling)
 
-          index === 1
-            ? div.parentNode.insertBefore(hr, div.nextSibling)
-            : null
+          index === 1 ? div.parentNode.insertBefore(hr, div.nextSibling) : null
           div.className = `x-${index}`
           div.style.display = 'none'
           // 不能从body直接插入元素 anki 不刷新的 淦
