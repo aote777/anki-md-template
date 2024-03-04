@@ -92,6 +92,11 @@
         str = str.replace(/&nbsp;/g, ' ')
         return str
       }
+
+      // 反转义 HTML 实体，确保卡片中所有的符号正常
+      // Eg. #include <stdio.h>
+      var unescapeHTMLEntities = (innerHTML) => Object.assign(document.createElement('textarea'), {innerHTML}).value;
+      
       // 解析（入口方法）
       var parseMarkDown = () => {
         var convert = new showdown.Converter({
@@ -121,7 +126,7 @@
         document.querySelectorAll('.md-content').forEach((div, index) => {
           console.log('查找到的容器元素', div)
           div.innerHTML = clearBlankNbsp(div.innerHTML)
-          var text = div.innerHTML
+          var text = unescapeHTMLEntities(div.innerHTML)
           console.log('text', text)
           var thisConverterSpecificOptions = convert.getOptions()
           console.log('当前的配置项', thisConverterSpecificOptions)
