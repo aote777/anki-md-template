@@ -11,6 +11,7 @@
 
 👇 这个是具体操作步骤。只看这里的操作步骤就好 ， 卡片模板代码已 GitHub 上为准（是最新的）。
 `https://www.jianshu.com/p/57b84a7a3c75` [跳转](https://www.jianshu.com/p/57b84a7a3c75)
+[链接文本](https://www.jianshu.com/p/57b84a7a3c75)<a href="#" target="_blank"></a>
 
 👇 目前的功能（有什么改进可以在 issue 里提 有能力可以自行修改提 pr）
 
