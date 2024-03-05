@@ -1,3 +1,5 @@
+<base target="_blank">
+
 # anki-md-template
 
 > **核心代码在`demo.html`中** > **不想手动创建模板,可以直接导入我上传好的牌组(./markdown.apkg),就会自动导入卡片模板了**
