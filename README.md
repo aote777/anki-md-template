@@ -1,6 +1,5 @@
-<base target="_blank">
-
-# anki-md-template
+> 核心markdown解析器 👉[markdown-it](https://github.com/markdown-it/markdown-it)
+> `https://github.com/markdown-it/markdown-it`
 
 > **核心代码在`demo.html`中** > **不想手动创建模板,可以直接导入我上传好的牌组(./markdown.apkg),就会自动导入卡片模板了**
 
@@ -18,7 +17,7 @@
 
 - [x] 全部样式风格采用`github-markdown-css` css 样式文件修改成自动识别系统主题（是否是暗黑模式） 以前的版本可以修改一下 cdn 地址
 
-- [x] 编辑只需严格按照 markdown 语法编写,不需要输入任何 html 标签（需要 showdown.js 支持，有一些配置项我可能没开），如果想配置 html 自己去那个 anki html 编辑器里改就行。但我不建议改。
+- [x] 编辑只需严格按照 markdown 语法编写,不需要输入任何 html 标签（需要 markdown-it 支持，有一些配置项我可能没开），如果想配置 html 自己去那个 anki html 编辑器里改就行。但我不建议改。
 
 - [x] 应 issues 的要求 加入了 对 anki mathJax 的兼容 (就是点他 anki 自带的编辑器的那个 fx 的图标)
 
