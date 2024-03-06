@@ -4,11 +4,9 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <base target="_blank">
     <title>anki-md模板测试</title>
   </head>
   <style>
-    /* 这个需要复制到anki的css样式的那个窗口里 */
     .markdown-body {
       box-sizing: border-box;
       min-width: 200px;
@@ -16,13 +14,11 @@
       margin: 0 auto;
       padding: 45px;
     }
-
     @media (max-width: 767px) {
       .markdown-body {
         padding: 15px;
       }
     }
-
     /* 初始状态下设置透明度为0 */
     .md-content {
       opacity: 0;
@@ -30,34 +26,71 @@
     }
   </style>
   <body>
-    <br />\[x = {-b \pm \sqrt{b^2-4ac} \over 2a}\]<br />
-    <div id="test" class="md-content">
-      When $a \ne 0$, there are two solutions to \(ax^2 + bx + c = 0\) and they
-      are 只有这个是正常的 $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+    <div class="md-content"></div>
+    <!-- prettier-ignore -->
+    <div class="md-content">
+
+> 呵呵呵
+> 呵呵呵哈哈哈哈
+
+> 喜喜
+
+# 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+---
+**加粗**
+*斜体*
+***加粗斜体***
+---
+> 引用
+---
+- 无序列表
+- 无序列表
+- 无序列表
+---
+1. 有序列表
+2. 有序列表
+3. 有序列表
+---
+[链接](https://www.baidu.com)
+---
+![图片](https://www.baidu.com/img/bd_logo1.png)
+---
+`行内代码`
+---
+```javascript
+// 代码块
+console.log('hello world')
+```
     </div>
-    <div class="md-content">* 呵呵 # 我看你真是老糊涂了</div>
     <script>
       'use strict'
-      // 在anki中查看调试信息
+      // 在anki中查看调试信息 没控制台啊
       function consoleLog(str) {
         var div = document.createElement('div')
         div.innerHTML = str
         document.body.appendChild(div)
       }
 
-      var JQ_CDN =
-        'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'
-      var SHOWDOWN_CDN =
-        'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/showdown/2.0.0/showdown.min.js'
+      // https://github.com/markdown-it/markdown-it
+      var MARKDOWN_IT_CDN =
+        'https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js'
+
+      // 代码高亮库
       var HIGHLIGHT_JS_CDN =
         'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js'
-      var es6CDN = 'https://polyfill.io/v3/polyfill.min.js?features=es6'
-      var MATHJAX_CDN =
-        'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/mathjax/3.2.0/es5/tex-chtml-full.js'
+
+      // 代码高亮样式
       var HIGHLIGHT_CSS_CDN =
         'https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/styles/base16/onedark.min.css'
+
+      // github-markdown-css
       var GITHUB_MARKDOWN_CSS_CDN =
-        'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-M/github-markdown-css/5.1.0/github-markdown.css'
+        'https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/github-markdown-css/5.1.0/github-markdown.min.css'
 
       // 加载库文件
       var createScript = (src) => {
@@ -81,6 +114,8 @@
         linkElement.onload = () => {}
         document.head.appendChild(linkElement)
       }
+      createLink(GITHUB_MARKDOWN_CSS_CDN)
+      createLink(HIGHLIGHT_CSS_CDN)
 
       // 清除br标签
       // anki自动生成的<br>全部干掉 严格按照原生换行来写
@@ -89,6 +124,7 @@
         return str
       }
 
+      // 清除空格实体字符
       var clearBlankNbsp = (str) => {
         str = str.replace(/&nbsp;/g, ' ')
         return str
@@ -96,45 +132,35 @@
 
       // 反转义 HTML 实体，确保卡片中所有的符号正常
       // Eg. #include <stdio.h>
-      var unescapeHTMLEntities = (innerHTML) => Object.assign(document.createElement('textarea'), {innerHTML}).value;
-      
-      // 解析（入口方法）
-      var parseMarkDown = () => {
-        var convert = new showdown.Converter({
-          // 启用对md中对图像尺寸的支持
-          // ![foo](foo.jpg =100x80)     simple, assumes units are in px
-          // ![bar](bar.jpg =100x*)      sets the height to "auto"
-          // ![baz](baz.jpg =80%x5em)  Image with width of 80% and height of 5em
-          parseImgDimensions: true,
-          // 启用对删除线的支持
-          strikethrough: true,
-          // 启用对表格语法的支持
-          tables: true,
-          // 启用checkbox的支持
-          tasklists: true,
-          // 尝试巧妙地修复与缩进代码中间与 es6 模板字符串相关的缩进问题
-          smartIndentationFix: true,
-          // 将换行符解析为 <br>，行尾不需要2个空格
-          simpleLineBreaks: true,
-          // 反斜杠转义html
-          backslashEscapesHTMLTags: true,
-          // 禁用将子列表缩进4个空格以使其嵌套的要求，有效地恢复到2或3个空格足够的旧行为
-          // disableforced4spacesindentedsublist: true,
-          ghCodeBlocks: true,
+      var unescapeHTMLEntities = (innerHTML) =>
+        Object.assign(document.createElement('textarea'), { innerHTML }).value
+
+      // 解析（入口main方法）
+      var parseMarkDownFn = () => {
+        const md = markdownit({
+          html: false,
+          linkify: true,
+          typographer: true,
+          breaks: true,
+          highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+              try {
+                return hljs.highlight(str, { language: lang }).value
+              } catch (__) {}
+            }
+
+            return '' // use external default escaping
+          },
         })
-        // 好像是失效的？？不管用呢
-        // convert.setFlavor('github')
         document.querySelectorAll('.md-content').forEach((div, index) => {
           console.log('查找到的容器元素', div)
-          div.innerHTML = clearBlankNbsp(div.innerHTML)
+          // 需要去除首尾空格 不然markdown-it会解析错误
           var text = unescapeHTMLEntities(div.innerHTML)
           console.log('text', text)
-          var thisConverterSpecificOptions = convert.getOptions()
-          console.log('当前的配置项', thisConverterSpecificOptions)
           // 清除br标签
           text = clearBR(text)
           // 👇关键核心md转换
-          var html = convert.makeHtml(text)
+          var html = md.render(text)
           var newDiv = document.createElement('div')
           var hr = document.createElement('hr')
           newDiv.innerHTML = html
@@ -145,31 +171,17 @@
           index === 1 ? div.parentNode.insertBefore(hr, div.nextSibling) : null
           div.className = `x-${index}`
           div.style.display = 'none'
-          // 不能从body直接插入元素 anki 不刷新的 淦
+          // 不能从body直接插入元素 anki 不刷新的
         })
       }
-      createLink(GITHUB_MARKDOWN_CSS_CDN)
-      createLink(HIGHLIGHT_CSS_CDN)
 
-      function texToHtml(texString) {
-        // 使用MathJax的tex2chtml函数将TeX字符串转换为HTML节点
-        const node = MathJax.tex2chtml(texString)
-        // 返回HTML字符串
-        return node.outerHTML
-      }
-      createScript(SHOWDOWN_CDN)
+      createScript(HIGHLIGHT_JS_CDN)
         .then(() => {
-          return createScript(HIGHLIGHT_JS_CDN)
+          return createScript(MARKDOWN_IT_CDN)
         })
         .then(() => {
           // anki模板无法使用window.onload我怀疑是被占用了
-          // window.onload = parseMarkDown
-          // 可以尝试手动清除anki生成的<br>
-          parseMarkDown()
-        })
-        .then(() => {
-          // 自动代码高亮
-          hljs.highlightAll()
+          parseMarkDownFn()
         })
         .then(() => {
           // 清除重复项 试试
