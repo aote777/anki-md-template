@@ -141,7 +141,7 @@ console.log('hello world')
       // 解析（入口main方法）
       var parseMarkDownFn = () => {
         const md = markdownit({
-          html: false,
+          html: true, // 若为 false 将导致 anki 自带的公式渲染失效。
           linkify: true,
           typographer: true,
           breaks: true,
@@ -158,7 +158,7 @@ console.log('hello world')
         document.querySelectorAll('.md-content').forEach((div, index) => {
           console.log('查找到的容器元素', div)
           // 需要去除首尾空格 不然markdown-it会解析错误
-          var text = unescapeHTMLEntities(div.innerHTML)
+          var text = unescapeHTMLEntities(div.innerHTML).trim()
           console.log('text', text)
           // 清除br标签
           text = clearBR(text)
