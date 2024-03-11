@@ -43,3 +43,30 @@
 可能是网络的问题,因为是采用 cdn 加载资源 不是本地
 可以反复刷新 或者 切换网络尝试修复一下
 或者把梯子关了(或者自己设置规则) 因为默认用的是字节的cdn库
+
+
+### 卡片模板创建新手指引(或直接导入现成的 `markdown.apkg` 牌组)
+
+1. 正面模板内容
+
+```
+<div class="md-content">
+{{Front}}
+</div>
+
+ <script>
+ // 这里复制demo.html中的script内容
+ </script>
+```
+
+2. 背面内容模板
+
+```
+{{FrontSide}}
+
+<div class="md-content">{{Back}}</div>
+```
+
+3. 样式
+
+复制 `./卡片样式.css` 文件的内容

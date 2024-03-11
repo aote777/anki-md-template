@@ -1,6 +1,12 @@
 /* 
 把这里的样式代码 复制到卡片模板 的样式区域
 */
+/* 初始状态下设置透明度为0 */
+.md-content {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
 
 /* github样式 */
 .markdown-body {
