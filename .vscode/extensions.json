@@ -1,6 +1,6 @@
 {
-  "recommendations":[
+  "recommendations": [
     "esbenp.prettier-vscode",
-    "shd101wyy.markdown-preview-enhanced",
+    "shd101wyy.markdown-preview-enhanced"
   ]
 }
