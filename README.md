@@ -1,10 +1,10 @@
+# 可以解析`markdown`语法的`anki`卡片模板。
+# 特点：纯文本代码模板 无需任何插件。复制就能用
+
 > 核心markdown解析器 👉[markdown-it](https://github.com/markdown-it/markdown-it)
 > `https://github.com/markdown-it/markdown-it`
 
 > **核心代码在`demo.html`中** > **不想手动创建模板,可以直接导入我上传好的牌组(./markdown.apkg),就会自动导入卡片模板了**
-
-# 可以解析`markdown`语法的`anki`卡片模板。
-# 特点：纯文本代码模板 无需任何插件。复制就能用
 
 
 👇 目前的功能（有什么改进可以在 issue 里提 有能力可以自行修改提 pr）
