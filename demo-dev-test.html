@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/onedark.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+    />
+    <script
+      defer
+      src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"
+    ></script>
+    <title>anki-md模板测试</title>
+  </head>
+  <style>
+    .markdown-body {
+      box-sizing: border-box;
+      min-width: 200px;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 45px;
+    }
+    @media (max-width: 767px) {
+      .markdown-body {
+        padding: 15px;
+      }
+    }
+    /* 初始状态下设置透明度为0 */
+    .md-content {
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+  </style>
+  <body>
+    <!-- prettier-ignore -->
+    <div class="md-content">
+### 我看showdown真是老糊涂了
+    </div>
+    <!-- prettier-ignore -->
+    <div class="md-content">
+
+> 呵呵呵
+> 呵呵呵哈哈哈哈
+
+> 喜喜
+
+# 一级标题
+## 二级标题
+### 三级标题
+#### 四级标题
+##### 五级标题
+###### 六级标题
+---
+**加粗**
+*斜体*
+***加粗斜体***
+---
+> 引用
+---
+- 无序列表
+- 无序列表
+- 无序列表
+---
+1. 有序列表
+2. 有序列表
+3. 有序列表
+---
+[链接](https://www.baidu.com)
+---
+![图片](https://www.baidu.com/img/bd_logo1.png)
+---
+`行内代码`
+---
+```javascript
+// 代码块
+console.log('hello world')
+```
+    </div>
+    <!-- 
+      整个script内容(包括script标签)
+      需要复制到anki的卡片模板中
+    -->
+    <!-- https://github.com/markdown-it/markdown-it -->
+    <script
+      defer
+      src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js"
+    ></script>
+    <!-- 代码高亮库 -->
+    <script
+      defer
+      src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"
+    ></script>
+    <script defer>
+      "use strict";
+      // 在anki中通过窗口查看调试信息 没控制台啊
+      function consoleLog(str) {
+        var div = document.createElement("div");
+        div.innerHTML = str;
+        document.body.appendChild(div);
+      }
+
+      // 清除br标签
+      // anki自动生成的<br>全部干掉 严格按照原生换行来写
+      var clearBR = (str) => {
+        str = str.replace(/<br>/g, "\r\n");
+        return str;
+      };
+
+      // 清除空格实体字符
+      var clearBlankNbsp = (str) => {
+        str = str.replace(/&nbsp;/g, " ");
+        return str;
+      };
+
+      // 反转义 HTML 实体，确保卡片中所有的符号正常
+      // Eg. #include <stdio.h>
+      var unescapeHTMLEntities = (innerHTML) =>
+        Object.assign(document.createElement("textarea"), { innerHTML }).value;
+
+      // 解析（入口main方法）
+      var parseMarkDownFn = () => {
+        const md = markdownit({
+          html: true, // 若为 false 将导致 anki 自带的公式渲染失效。
+          linkify: true,
+          typographer: true,
+          breaks: true,
+          highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+              try {
+                return hljs.highlight(str, { language: lang }).value;
+              } catch (__) {}
+            }
+
+            return ""; // use external default escaping
+          },
+        });
+        document.querySelectorAll(".md-content").forEach((div, index) => {
+          console.log("查找到的容器元素", div);
+          // 需要去除首尾空格 不然markdown-it会解析错误
+          var text = unescapeHTMLEntities(div.innerHTML).trim();
+          console.log("text", text);
+          // 清除br标签
+          text = clearBR(text);
+          // 👇关键核心md转换
+          var html = md.render(text);
+          var newDiv = document.createElement("div");
+          var hr = document.createElement("hr");
+          newDiv.innerHTML = html;
+          // 激活github-markdown-css
+          newDiv.className = "markdown-body";
+          div.parentNode.insertBefore(newDiv, div.nextSibling);
+
+          index === 1 ? div.parentNode.insertBefore(hr, div.nextSibling) : null;
+          div.className = `x-${index}`;
+          div.style.display = "none";
+          // 不能从body直接插入元素 anki 不刷新的
+        });
+      };
+      // TEMP 复制到卡片中要打开注释 去掉下边的代码。
+      // parseMarkDownFn();
+
+      // TEMP 在浏览器中测试的时候使用
+      document.addEventListener("DOMContentLoaded", function () {
+        // 你的主要代码
+        "use strict";
+        parseMarkDownFn();
+      });
+    </script>
+  </body>
+</html>
