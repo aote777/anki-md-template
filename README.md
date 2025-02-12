@@ -32,7 +32,9 @@
 
 **缺陷**
 
-1.~~代码段中输入的空格会被 markdown 转义 直接输出 nbsp;~~ (修复)
+1. ~~代码段中输入的空格会被 markdown 转义 直接输出 nbsp;~~ (修复)
+
+2. windows中的anki github-markdown-css 样式库 暗黑模式失效（ios中可以自动切换到暗黑模式） 有空看看什么原因
 
 ---
 
