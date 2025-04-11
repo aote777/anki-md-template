@@ -1,39 +1,61 @@
 <div class="md-content">
 {{Front}}
 </div>
-<!-- https://github.com/markdown-it/markdown-it -->
-<script defer src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js"></script>
-<!-- 代码高亮库 -->
-<script defer src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"></script>
-<script defer>
-      'use strict'
-      // 在anki中通过窗口查看调试信息 没控制台啊
-      function consoleLog(str) {
-        var div = document.createElement('div')
-        div.innerHTML = str
-        document.body.appendChild(div)
+
+
+<script>
+  var getResources = [
+    getScript("_markdown-it.min.js", "https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js"),
+    getScript("_highlight.min.js", "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"),
+  ];
+  Promise.all(getResources).then(() => {
+    parseMarkDownFn();
+  })
+
+  function getScript(path, altURL) {
+    return new Promise((resolve, reject) => {
+      let script = document.createElement("script");
+      script.onload = resolve;
+      script.onerror = function () {
+        let script_online = document.createElement("script");
+        script_online.onload = resolve;
+        script_online.onerror = reject;
+        script_online.src = altURL;
+        document.head.appendChild(script_online);
       }
+      script.src = path;
+      document.head.appendChild(script);
+    })
+  }
 
-      // 清除br标签
-      // anki自动生成的<br>全部干掉 严格按照原生换行来写
-      var clearBR = (str) => {
-        str = str.replace(/<br>/g, '\r\n')
-        return str
-      }
+  // 在anki中通过窗口查看调试信息 没控制台啊
+  function consoleLog(str) {
+    var div = document.createElement('div')
+    div.innerHTML = str
+    document.body.appendChild(div)
+  }
 
-      // 清除空格实体字符
-      var clearBlankNbsp = (str) => {
-        str = str.replace(/&nbsp;/g, ' ')
-        return str
-      }
+  // 清除br标签
+  // anki自动生成的<br>全部干掉 严格按照原生换行来写
+  var clearBR = (str) => {
+    str = str.replace(/<br>/g, '\r\n')
+    return str
+  }
 
-      // 反转义 HTML 实体，确保卡片中所有的符号正常
-      // Eg. #include <stdio.h>
-      var unescapeHTMLEntities = (innerHTML) =>
-        Object.assign(document.createElement('textarea'), { innerHTML }).value
+  // 清除空格实体字符
+  var clearBlankNbsp = (str) => {
+    str = str.replace(/&nbsp;/g, ' ')
+    return str
+  }
 
-      // 解析（入口main方法）
-      var parseMarkDownFn = () => {
+  // 反转义 HTML 实体，确保卡片中所有的符号正常
+  // Eg. #include <stdio.h>
+  var unescapeHTMLEntities = (innerHTML) =>
+    Object.assign(document.createElement('textarea'), { innerHTML }).value
+
+  // 解析（入口main方法）
+ // 解析（入口main方法）
+ var parseMarkDownFn = () => {
         const md = markdownit({
           html: true, // 若为 false 将导致 anki 自带的公式渲染失效。
           linkify: true,
@@ -71,5 +93,5 @@
           // 不能从body直接插入元素 anki 不刷新的
         })
       }
-			parseMarkDownFn();
-    </script>
+
+</script>
