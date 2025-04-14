@@ -16,10 +16,16 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
-    <script
-      defer
-      src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"
-    ></script>
+    <!-- 添加MathJax配置 -->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [['$','$']],
+          displayMath: [['$$','$$']],
+          processEscapes: true
+        }
+      });
+    </script>
     <title>anki-md模板测试</title>
   </head>
   <style>
@@ -48,18 +54,18 @@
     </div>
     <!-- prettier-ignore -->
     <div class="md-content">
-
+这是一个行内公式
+$$E=mc^2$$
+和一个块级公式
+$$\\frac{d}{dx}(x^n) = nx^{n-1}$$
+***
 > 呵呵呵
-> 呵呵呵哈哈哈哈
 
 > 喜喜
 
 # 一级标题
 ## 二级标题
 ### 三级标题
-#### 四级标题
-##### 五级标题
-###### 六级标题
 ---
 **加粗**
 *斜体*
@@ -86,22 +92,44 @@
 console.log('hello world')
 ```
     </div>
-    <!-- 
-      整个script内容(包括script标签)
-      需要复制到anki的卡片模板中
-    -->
-    <!-- https://github.com/markdown-it/markdown-it -->
-    <script
-      defer
-      src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js"
-    ></script>
-    <!-- 代码高亮库 -->
-    <script
-      defer
-      src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"
-    ></script>
-    <script defer>
-      "use strict";
+
+    <script>
+      var getResources = [
+        getScript(
+          "https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js"
+        ),
+        getScript(
+          "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"
+        ),
+        // 添加markdown-it-texmath插件
+        getScript(
+          "https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"
+        ),
+        // 添加MathJax
+        getScript(
+          "https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"
+        )
+      ];
+
+      // 加载资源并初始化
+      Promise.all(getResources)
+        .then(() => {
+          parseMarkDownFn();
+        })
+        .catch((error) => {
+          consoleLog("Failed to load required resources: " + error);
+        });
+
+      function getScript(url) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.onload = resolve;
+          script.onerror = () =>
+            reject(new Error(`Failed to load script from ${url}`));
+          script.src = url;
+          document.head.appendChild(script);
+        });
+      }
       // 在anki中通过窗口查看调试信息 没控制台啊
       function consoleLog(str) {
         var div = document.createElement("div");
@@ -144,6 +172,16 @@ console.log('hello world')
             return ""; // use external default escaping
           },
         });
+
+        // 配置markdown-it-texmath插件
+        if (window.texmath) {
+          md.use(window.texmath, {
+            engine: MathJax,
+            delimiters: 'dollars',
+            katexOptions: { macros: {"\\RR": "\\mathbb{R}"} }
+          });
+        }
+        
         document.querySelectorAll(".md-content").forEach((div, index) => {
           console.log("查找到的容器元素", div);
           // 需要去除首尾空格 不然markdown-it会解析错误
@@ -166,15 +204,6 @@ console.log('hello world')
           // 不能从body直接插入元素 anki 不刷新的
         });
       };
-      // TEMP 复制到卡片中要打开注释 去掉下边的代码。
-      // parseMarkDownFn();
-
-      // TEMP 在浏览器中测试的时候使用
-      document.addEventListener("DOMContentLoaded", function () {
-        // 你的主要代码
-        "use strict";
-        parseMarkDownFn();
-      });
     </script>
   </body>
 </html>
