@@ -7,23 +7,7 @@
   var getResources = [
     getScript("https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/markdown-it/12.3.2/markdown-it.min.js"),
     getScript("https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"),
-    // 添加markdown-it-texmath插件
-    getScript("https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"),
-    // 添加MathJax
-    getScript("https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js")
   ];
-
-  // MathJax配置
-  window.MathJax = {
-    tex: {
-      inlineMath: [['$', '$']],
-      displayMath: [['$$', '$$']],
-      processEscapes: true
-    },
-    options: {
-      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
-    }
-  };
 
   // 加载资源并初始化
   Promise.all(getResources)
@@ -85,16 +69,6 @@
         return '' // use external default escaping
       },
     })
-    
-    // 配置markdown-it-texmath插件
-    if (window.texmath) {
-      md.use(window.texmath, {
-        engine: MathJax,
-        delimiters: 'dollars',
-        katexOptions: { macros: {"\\RR": "\\mathbb{R}"} }
-      });
-    }
-    
     document.querySelectorAll('.md-content').forEach((div, index) => {
       console.log('查找到的容器元素', div)
       // 需要去除首尾空格 不然markdown-it会解析错误
