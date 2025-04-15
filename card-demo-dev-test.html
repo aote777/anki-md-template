@@ -16,17 +16,7 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
-    <!-- 添加MathJax配置 -->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [['$','$']],
-          displayMath: [['$$','$$']],
-          processEscapes: true
-        }
-      });
-    </script>
-    <title>anki-md模板测试</title>
+    <title>anki-md模板测试（chrome等浏览器开发测试即可）</title>
   </head>
   <style>
     .markdown-body {
@@ -55,13 +45,11 @@
     <!-- prettier-ignore -->
     <div class="md-content">
 这是一个行内公式
-$$E=mc^2$$
+$E=mc^2$
 和一个块级公式
 $$\\frac{d}{dx}(x^n) = nx^{n-1}$$
 ***
 > 呵呵呵
-
-> 喜喜
 
 # 一级标题
 ## 二级标题
@@ -74,12 +62,8 @@ $$\\frac{d}{dx}(x^n) = nx^{n-1}$$
 > 引用
 ---
 - 无序列表
-- 无序列表
-- 无序列表
 ---
 1. 有序列表
-2. 有序列表
-3. 有序列表
 ---
 [链接](https://www.baidu.com)
 ---
