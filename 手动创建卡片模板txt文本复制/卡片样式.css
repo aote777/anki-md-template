@@ -1,6 +1,8 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/base16/onedark.min.css');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css');
+@import url('https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/css/texmath.min.css');
+@import url('https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css');
 /* 
 把这里的样式代码 ctrl a 复制到卡片模板 的样式区域
 */

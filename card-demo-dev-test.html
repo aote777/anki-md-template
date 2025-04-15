@@ -16,6 +16,14 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/css/texmath.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"
+    />
     <title>anki-md模板测试（chrome等浏览器开发测试即可）</title>
   </head>
   <style>
@@ -44,10 +52,16 @@
     </div>
     <!-- prettier-ignore -->
     <div class="md-content">
-这是一个行内公式
-$E=mc^2$
-和一个块级公式
-$$\\frac{d}{dx}(x^n) = nx^{n-1}$$
+行内公式：$E=mc^2$
+***
+块级公式：
+$$\frac{d}{dx}(x^n) = nx^{n-1}$$
+***
+矩阵：
+$$\begin{pmatrix} a & b \\ c & d \end{pmatrix}$$
+***
+积分：
+$$\int_{a}^{b} f(x) \, dx$$
 ***
 > 呵呵呵
 
@@ -85,14 +99,12 @@ console.log('hello world')
         getScript(
           "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"
         ),
-        // 添加markdown-it-texmath插件
         getScript(
-          "https://cdn.jsdelivr.net/npm/markdown-it-texmath/texmath.min.js"
+          "https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"
         ),
-        // 添加MathJax
         getScript(
-          "https://cdn.bootcdn.net/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"
-        )
+          "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+        ),
       ];
 
       // 加载资源并初始化
@@ -156,16 +168,11 @@ console.log('hello world')
             return ""; // use external default escaping
           },
         });
-
-        // 配置markdown-it-texmath插件
-        if (window.texmath) {
-          md.use(window.texmath, {
-            engine: MathJax,
-            delimiters: 'dollars',
-            katexOptions: { macros: {"\\RR": "\\mathbb{R}"} }
-          });
-        }
-        
+        md.use(texmath, {
+          engine: katex,
+          delimiters: "dollars",
+          katexOptions: { macros: { "\\RR": "\\mathbb{R}" } },
+        });
         document.querySelectorAll(".md-content").forEach((div, index) => {
           console.log("查找到的容器元素", div);
           // 需要去除首尾空格 不然markdown-it会解析错误
