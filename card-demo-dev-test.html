@@ -99,12 +99,12 @@ console.log('hello world')
         getScript(
           "https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highlight.js/11.4.0/highlight.min.js"
         ),
-        getScript(
-          "https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"
-        ),
-        getScript(
-          "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
-        ),
+        // getScript(
+        //   "https://cdn.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js"
+        // ),
+        // getScript(
+        //   "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+        // ),
       ];
 
       // 加载资源并初始化
@@ -168,11 +168,11 @@ console.log('hello world')
             return ""; // use external default escaping
           },
         });
-        md.use(texmath, {
-          engine: katex,
-          delimiters: "dollars",
-          katexOptions: { macros: { "\\RR": "\\mathbb{R}" } },
-        });
+        // md.use(texmath, {
+        //   engine: katex,
+        //   delimiters: "dollars",
+        //   katexOptions: { macros: { "\\RR": "\\mathbb{R}" } },
+        // });
         document.querySelectorAll(".md-content").forEach((div, index) => {
           console.log("查找到的容器元素", div);
           // 需要去除首尾空格 不然markdown-it会解析错误
