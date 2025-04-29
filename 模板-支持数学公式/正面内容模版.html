@@ -1,0 +1,134 @@
+<div class="markdown-body">
+    {{Front}}
+</div>
+
+
+<script>
+
+    // 是否显示日志信息
+    var isDebugging = false;
+
+    // javascript 资源加载
+    initScriptResource(
+        "https://gcore.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js",
+        "https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js",
+        "https://gcore.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js",
+        "https://gcore.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js").then(() => {
+        // Anki 代码都执行完成后再执行，优先使用 Anki 自带的数学公式解析
+        setTimeout(() => {
+            clearMessageDivs();
+            parseMarkDownFn();
+        });
+    }).catch(error => {
+        appendMessageDiv('Error: ' + error);
+        throw error;
+    });
+
+
+    /**
+     * 转换卡片内容为 markdown 网页格式
+     */
+    function parseMarkDownFn() {
+        // markdown-it 实例
+        let md = markdownit({
+            html: true,
+            linkify: true,
+            typographer: true,
+            breaks: true,
+            highlight: function (str, lang) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(str, {language: lang}).value
+                    } catch (__) {
+                    }
+                }
+                return '';
+            }
+        }).use(window.texmath, {
+            engine: katex,
+            // 设置数学公式标识符为：$...$ or $$...$$ or \(...\) or \[...\]
+            // 参考：https://www.npmjs.com/package/markdown-it-texmath
+            delimiters: ['dollars', 'brackets'],
+            katexOptions: {macros: {"\\RR": "\\mathbb{R}"}}
+        });
+        // 转换内容
+        document.querySelectorAll('.markdown-body').forEach((div, index) => {
+            appendMessageDiv("------------div index: " + (index + 1) + "------------");
+            appendMessageDiv("Original content：", div.innerHTML);
+
+            let text = div.innerHTML
+                .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
+                .replace(/&nbsp;/g, ' ')
+                .replace(/<br>/g, '\r\n')
+                .trim();
+
+            appendMessageDiv("After replacing special characters：", text);
+            text = md.render(text);
+            appendMessageDiv("After markdown-it conversion：", text);
+            div.innerHTML = md.render(text);
+        });
+        // 最后将卡片显示，避免公式闪烁更新
+        document.querySelectorAll('.markdown-body').forEach((div) => {
+            div.style.opacity = 1;
+        });
+    }
+
+    /**
+     * 加载 javascript 资源
+     * @param scriptUrls 多个资源地址
+     * @returns {Promise<Awaited<unknown>[]>|Promise<void>}
+     */
+    function initScriptResource(...scriptUrls) {
+        // 添加判断，避免重复加载
+        if (typeof markdownit !== 'undefined') {
+            appendMessageDiv("markdown-it is loaded!")
+            return Promise.resolve();
+        }
+
+        appendMessageDiv("markdown-it 没有加载，重新添加触发加载")
+        return Promise.all(scriptUrls.map(url => {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.onload = resolve;
+                script.onerror = () => reject(new Error(`Failed to load script from ${url}`));
+                script.src = url;
+                document.head.appendChild(script);
+            });
+        }));
+    }
+
+    /**
+     * 页面添加消息提示
+     * @param messages 多个提示消息，使用换行分隔展示
+     */
+    function appendMessageDiv(...messages) {
+        if (!isDebugging) {
+            return;
+        }
+        const messageDiv = document.createElement("div");
+        messageDiv.className = "my-message-red-div";
+        messageDiv.style.color = "red";
+        messageDiv.style.textAlign = "left";
+        messages.forEach(message => {
+            messageDiv.appendChild(document.createTextNode(message));
+            messageDiv.appendChild(document.createElement("br"));
+        })
+        messageDiv.appendChild(document.createElement("hr"))
+        document.body.appendChild(messageDiv);
+    }
+
+    /**
+     * 删除所有消息提示div
+     */
+    function clearMessageDivs() {
+        if (!isDebugging) {
+            return;
+        }
+        const messageDivs = document.querySelectorAll(".my-message-red-div");
+        if (messageDivs.length === 0) {
+            return;
+        }
+        messageDivs.forEach(div => div.remove());
+    }
+
+</script>
