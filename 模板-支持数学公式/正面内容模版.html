@@ -5,24 +5,29 @@
 
 <script>
 
-    // 是否显示日志信息
-    var isDebugging = false;
+    // 日志级别： debug、info、warn、error、off
+    var config_logLevel = "error";
+
+    // 是否展示数学公式转换错误信息
+    var config_showMathError = false;
+
 
     // javascript 资源加载
-    initScriptResource(
+    initScriptResource([
         "https://gcore.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js",
         "https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.11.1/build/highlight.min.js",
         "https://gcore.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js",
-        "https://gcore.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js").then(() => {
+        "https://gcore.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+    ]).then(() => {
         // Anki 代码都执行完成后再执行，优先使用 Anki 自带的数学公式解析
         setTimeout(() => {
-            clearMessageDivs();
-            parseMarkDownFn();
+            try {
+                parseMarkDownFn();
+            } catch (e) {
+                DivLog.error("Error: " + e);
+            }
         });
-    }).catch(error => {
-        appendMessageDiv('Error: ' + error);
-        throw error;
-    });
+    })
 
 
     /**
@@ -49,22 +54,29 @@
             // 设置数学公式标识符为：$...$ or $$...$$ or \(...\) or \[...\]
             // 参考：https://www.npmjs.com/package/markdown-it-texmath
             delimiters: ['dollars', 'brackets'],
-            katexOptions: {macros: {"\\RR": "\\mathbb{R}"}}
+            // 参考：https://katex.org/docs/options
+            katexOptions: {
+                output: 'html',
+                throwOnError: false,
+                // IOS 端没有 console.warn 方法
+                strict: (errorCode, errorMsg, token) => {
+                    if (config_showMathError) {
+                        DivLog.error('Warn: ' + errorCode + ' ' + errorMsg + ' ' + token);
+                        return "error";
+                    } else {
+                        DivLog.warn('Warn: ' + errorCode + ' ' + errorMsg + ' ' + token);
+                        return "ignore";
+                    }
+                }
+            }
         });
         // 转换内容
         document.querySelectorAll('.markdown-body').forEach((div, index) => {
-            appendMessageDiv("------------div index: " + (index + 1) + "------------");
-            appendMessageDiv("Original content：", div.innerHTML);
-
-            let text = div.innerHTML
-                .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
-                .replace(/&nbsp;/g, ' ')
-                .replace(/<br>/g, '\r\n')
-                .trim();
-
-            appendMessageDiv("After replacing special characters：", text);
+            // 预处理文本，替换特殊字符，如：&lt; &gt; &amp; &nbsp;
+            let text = preProcessText(div, index)
+            // 转换成 markdown 网页格式
             text = md.render(text);
-            appendMessageDiv("After markdown-it conversion：", text);
+            DivLog.debug("After markdown-it conversion：", text);
             div.innerHTML = md.render(text);
         });
         // 最后将卡片显示，避免公式闪烁更新
@@ -74,18 +86,48 @@
     }
 
     /**
+     * 预处理文本，替换特殊字符
+     * @param {Element} div
+     * @param {number} index
+     * @returns {string}
+     */
+    function preProcessText(div, index) {
+        DivLog.debug("------------.markdown-body: " + (index + 1) + "------------");
+        DivLog.debug("Original content：", div.innerHTML);
+        let text = div.innerHTML
+
+        // <code></code> 包裹的内容不做处理
+        let code_tag_matches
+        [text, code_tag_matches] = Censor.censorCodeHtml(text);
+        if (code_tag_matches.length > 0) {
+            DivLog.debug("After replacing <code></code>：", text);
+        }
+
+        text = text.trim()
+            .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
+            .replace(/&nbsp;/g, ' ')
+            .replace(/<br>/g, '\r\n');
+
+        text = Censor.decensorCodeHtml(text, code_tag_matches)
+        DivLog.debug("After replacing special characters：", text);
+        return text;
+    }
+
+    /**
      * 加载 javascript 资源
-     * @param scriptUrls 多个资源地址
+     * @param scriptUrls 多个资源地址数组
      * @returns {Promise<Awaited<unknown>[]>|Promise<void>}
      */
-    function initScriptResource(...scriptUrls) {
+    function initScriptResource(scriptUrls) {
+        initMyClass();
+
         // 添加判断，避免重复加载
         if (typeof markdownit !== 'undefined') {
-            appendMessageDiv("markdown-it is loaded!")
+            DivLog.info("markdown-it is loaded!")
             return Promise.resolve();
         }
 
-        appendMessageDiv("markdown-it 没有加载，重新添加触发加载")
+        DivLog.info("markdown-it did not load, re-adding triggers loading!")
         return Promise.all(scriptUrls.map(url => {
             return new Promise((resolve, reject) => {
                 const script = document.createElement("script");
@@ -94,41 +136,85 @@
                 script.src = url;
                 document.head.appendChild(script);
             });
-        }));
+        })).catch(error => {
+            DivLog.error('Error: ' + error);
+            throw error;
+        });
     }
 
-    /**
-     * 页面添加消息提示
-     * @param messages 多个提示消息，使用换行分隔展示
-     */
-    function appendMessageDiv(...messages) {
-        if (!isDebugging) {
-            return;
+
+    function initMyClass() {
+        if (typeof DivLog === 'undefined') {
+            window.DivLog = {
+                LOG_LEVEL: "info",
+                levelMap: {'debug': 5, 'info': 4, 'warn': 3, 'error': 2, 'off': 1},
+
+                debug(...messages) {
+                    if (this.levelMap[this.LOG_LEVEL] >= 5) {
+                        this._log("", ...messages);
+                    }
+                },
+                info(...messages) {
+                    if (this.levelMap[this.LOG_LEVEL] >= 4) {
+                        this._log("", ...messages);
+                    }
+                },
+                warn(...messages) {
+                    if (this.levelMap[this.LOG_LEVEL] >= 3) {
+                        this._log("orange", ...messages);
+                    }
+                },
+                error(...messages) {
+                    if (this.levelMap[this.LOG_LEVEL] >= 2) {
+                        this._log("red", ...messages);
+                    }
+                },
+                _log(fontColor, ...messages) {
+                    const messageDiv = document.createElement("div");
+                    messageDiv.className = "my-message-div";
+                    messageDiv.style.color = fontColor;
+                    messages.forEach(message => {
+                        messageDiv.appendChild(document.createTextNode(message));
+                        messageDiv.appendChild(document.createElement("br"));
+                    });
+                    messageDiv.appendChild(document.createElement("hr"));
+                    document.body.appendChild(messageDiv)
+                },
+                clearLogDiv() {
+                    document.querySelectorAll(".my-message-div").forEach(div => div.remove());
+                }
+            };
+            DivLog.LOG_LEVEL = config_logLevel;
         }
-        const messageDiv = document.createElement("div");
-        messageDiv.className = "my-message-red-div";
-        messageDiv.style.color = "red";
-        messageDiv.style.textAlign = "left";
-        messages.forEach(message => {
-            messageDiv.appendChild(document.createTextNode(message));
-            messageDiv.appendChild(document.createElement("br"));
-        })
-        messageDiv.appendChild(document.createElement("hr"))
-        document.body.appendChild(messageDiv);
+        DivLog.clearLogDiv();
+
+        if (typeof Censor === 'undefined') {
+            const ANKI_CODE_REGEXP = /<code[^>]*>([\s\S]*?)<\/code>/g;
+            const ANKI_CODE_REPLACE = "##ANKI_CODE_REPLACE##";
+            window.Censor = {
+                censorCodeHtml: function (note_text) {
+                    return this._censor(note_text, ANKI_CODE_REGEXP, ANKI_CODE_REPLACE)
+                },
+                decensorCodeHtml: function (note_text, replacements) {
+                    return this._decensor(note_text, ANKI_CODE_REPLACE, replacements)
+                },
+                _censor: function (note_text, regexp, mask) {
+                    /*Take note_text and replace every match of regexp with mask, simultaneously adding it to a string array*/
+                    let matches = []
+                    for (let match of note_text.matchAll(regexp)) {
+                        matches.push(match[0])
+                    }
+                    return [note_text.replace(regexp, mask), matches]
+                },
+                _decensor: function (note_text, mask, replacements) {
+                    for (let replacement of replacements) {
+                        note_text = note_text.replace(mask, replacement)
+                    }
+                    return note_text
+                }
+            }
+        }
     }
 
-    /**
-     * 删除所有消息提示div
-     */
-    function clearMessageDivs() {
-        if (!isDebugging) {
-            return;
-        }
-        const messageDivs = document.querySelectorAll(".my-message-red-div");
-        if (messageDivs.length === 0) {
-            return;
-        }
-        messageDivs.forEach(div => div.remove());
-    }
 
 </script>
