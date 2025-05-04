@@ -87,6 +87,7 @@ $$\int_{a}^{b} f(x) \, dx$$
 配置 config_showMathError 为 false 时忽略数学公式转换异常
 $2^{层数-1}$  （有异常：unicodeTextInMathMode）
 $E=mc^2%$  （有异常：commentAtEnd %）
+$\left($  （转换失败）
 ***
 </div>
 
@@ -97,9 +98,14 @@ $E=mc^2%$  （有异常：commentAtEnd %）
 <li>下面代码的 HTML 格式中 <code>&amp;gt;</code> 与 <code>&amp;lt;</code> 不能转义为 &gt; 和 &lt;，否则会有异常的下划线</li>
 <li>不转换 <code>&lt;code&gt;&lt;/code&gt;</code>包裹的内容</li>
 </ul>
-<pre><code class="hljs java language-java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">NumberPair</span>&lt;U <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>, V <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>&gt; <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Pair</span>&lt;U,V&gt; {
+<pre><code class="hljs java language-java"><span class="hljs-keyword">public</span> <span
+        class="hljs-keyword">class</span> <span class="hljs-title class_">NumberPair</span>&lt;U <span
+        class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>, V <span
+        class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>&gt; <span
+        class="hljs-keyword">extends</span> <span class="hljs-title class_">Pair</span>&lt;U,V&gt; {
     <span class="hljs-comment">//</span>
-    <span class="hljs-keyword">public</span> <span class="hljs-title function_">NumberPair</span><span class="hljs-params">(U first, V second)</span> {
+    <span class="hljs-keyword">public</span> <span class="hljs-title function_">NumberPair</span><span
+            class="hljs-params">(U first, V second)</span> {
         <span class="hljs-built_in">super</span>(first, second);
     }
 }
