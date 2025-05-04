@@ -5,11 +5,8 @@
 
 <script>
 
-    // 日志级别： debug、info、warn、error、off
+    // 日志级别： debug、warn、error
     var config_logLevel = "error";
-
-    // 是否展示数学公式转换错误信息
-    var config_showMathError = false;
 
 
     // javascript 资源加载
@@ -19,27 +16,38 @@
         "https://gcore.jsdelivr.net/npm/markdown-it-texmath@1.0.0/texmath.min.js",
         "https://gcore.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
     ]).then(() => {
-        // Anki 代码都执行完成后再执行，优先使用 Anki 自带的数学公式解析
+        // Anki 原来的逻辑执行完成后再转换内容
         setTimeout(() => {
-            try {
-                parseMarkDownFn();
-            } catch (e) {
-                DivLog.error("Error: " + e);
-            }
+            renderMarkDownFn();
         });
     })
-
 
     /**
      * 转换卡片内容为 markdown 网页格式
      */
-    function parseMarkDownFn() {
-        // markdown-it 实例
-        let md = markdownit({
+    function renderMarkDownFn() {
+        try {
+            document.querySelectorAll('.markdown-body').forEach((div) => {
+                div.innerHTML = renderMarkDown(div.innerHTML);
+                div.style.opacity = '1';
+            });
+        } catch (e) {
+            DivLog.error("Error: " + e);
+        }
+    }
+
+    function getAnkiMarkDownIt() {
+        if (typeof AnkiMarkDownIt !== 'undefined') {
+            DivLog.info("AnkiMarkDownIt is loaded!")
+            return AnkiMarkDownIt;
+        }
+        DivLog.info("AnkiMarkDownIt did not load!")
+        window.AnkiMarkDownIt = markdownit({
+            // 配置参考：https://markdown-it.docschina.org/api/MarkdownIt.html#markdownit-new
             html: true,
             linkify: true,
-            typographer: true,
-            breaks: true,
+            typographer: false, // 为 true 时，将 (C)、(R)、(TM) 转化为 ©、®、™
+            breaks: true,       // 为 true 时，将 \n 转化为 <br>
             highlight: function (str, lang) {
                 if (lang && hljs.getLanguage(lang)) {
                     try {
@@ -51,65 +59,62 @@
             }
         }).use(window.texmath, {
             engine: katex,
-            // 设置数学公式标识符为：$...$ or $$...$$ or \(...\) or \[...\]
-            // 参考：https://www.npmjs.com/package/markdown-it-texmath
-            delimiters: ['dollars', 'brackets'],
-            // 参考：https://katex.org/docs/options
+            // 数学公式标识符，参考：https://www.npmjs.com/package/markdown-it-texmath
+            // 'dollars'：$...$ or $$...$$
+            // 'brackets'： \(...\) or \[...\]，这个标识符号是 Anki 默认的，不用解析
+            delimiters: ['dollars'],
+            // katex 的配置选项，参考：https://katex.org/docs/options
             katexOptions: {
                 output: 'html',
-                throwOnError: false,
-                // IOS 端没有 console.warn 方法
+                throwOnError: true, // true-页面展示解析异常，false-解析异常的公式展示原字符并标记为红色
                 strict: (errorCode, errorMsg, token) => {
-                    if (config_showMathError) {
-                        DivLog.error('Warn: ' + errorCode + ' ' + errorMsg + ' ' + token);
-                        return "error";
-                    } else {
-                        DivLog.warn('Warn: ' + errorCode + ' ' + errorMsg + ' ' + token);
-                        return "ignore";
-                    }
+                    DivLog.warn('Warn: ' + errorCode + ' ' + errorMsg + ' ' + token);
+                    return "ignore";
                 }
             }
         });
-        // 转换内容
-        document.querySelectorAll('.markdown-body').forEach((div, index) => {
-            // 预处理文本，替换特殊字符，如：&lt; &gt; &amp; &nbsp;
-            let text = preProcessText(div, index)
-            // 转换成 markdown 网页格式
-            text = md.render(text);
-            DivLog.debug("After markdown-it conversion：", text);
-            div.innerHTML = md.render(text);
-        });
-        // 最后将卡片显示，避免公式闪烁更新
-        document.querySelectorAll('.markdown-body').forEach((div) => {
-            div.style.opacity = 1;
-        });
+        return window.AnkiMarkDownIt;
     }
 
     /**
-     * 预处理文本，替换特殊字符
-     * @param {Element} div
-     * @param {number} index
+     * 绘制内容为 markdown 网页格式
+     * @param {string} text
      * @returns {string}
      */
-    function preProcessText(div, index) {
-        DivLog.debug("------------.markdown-body: " + (index + 1) + "------------");
-        DivLog.debug("Original content：", div.innerHTML);
-        let text = div.innerHTML
+    function renderMarkDown(text) {
+        DivLog.debug("==========================================");
+        DivLog.debug("Original content：", text);
 
         // <code></code> 包裹的内容不做处理
         let code_tag_matches
-        [text, code_tag_matches] = Censor.censorCodeHtml(text);
+        [text, code_tag_matches] = Censor.censorCodeTag(text);
         if (code_tag_matches.length > 0) {
-            DivLog.debug("After replacing <code></code>：", text);
+            DivLog.debug("After hide html tag <code></code>：", text);
+        }
+
+        // <mjx-container></mjx-container> 包裹的内容不做处理
+        let mjx_tag_matches
+        [text, mjx_tag_matches] = Censor.censorMJXTag(text);
+        if (mjx_tag_matches.length > 0) {
+            DivLog.debug("After hide html tag <mjx-container></mjx-container>：", text);
         }
 
         text = text.trim()
-            .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
-            .replace(/&nbsp;/g, ' ')
-            .replace(/<br>/g, '\r\n');
+            .replace(/&(amp|lt|gt|nbsp);/g, (_, type) => {
+                const entities = {amp: '&', lt: '<', gt: '>', nbsp: ' '};
+                return entities[type] || '';
+            })
+            .replace(/<br>/g, '\n');
+        DivLog.debug("After reverse some HTML tags：", text);
 
-        text = Censor.decensorCodeHtml(text, code_tag_matches)
-        DivLog.debug("After replacing special characters：", text);
+        // 转换成 markdown 网页格式
+        text = getAnkiMarkDownIt().render(text);
+        DivLog.debug("After markdown-it conversion：", text);
+
+        // 还原隐藏的内容
+        text = Censor.decensorMJXTag(text, mjx_tag_matches)
+        text = Censor.decensorCodeTag(text, code_tag_matches)
+
         return text;
     }
 
@@ -137,13 +142,14 @@
                 document.head.appendChild(script);
             });
         })).catch(error => {
-            DivLog.error('Error: ' + error);
+            DivLog.error(error);
             throw error;
         });
     }
 
 
     function initMyClass() {
+        // 日志工具
         if (typeof DivLog === 'undefined') {
             window.DivLog = {
                 LOG_LEVEL: "info",
@@ -171,32 +177,58 @@
                 },
                 _log(fontColor, ...messages) {
                     const messageDiv = document.createElement("div");
-                    messageDiv.className = "my-message-div";
                     messageDiv.style.color = fontColor;
                     messages.forEach(message => {
                         messageDiv.appendChild(document.createTextNode(message));
                         messageDiv.appendChild(document.createElement("br"));
                     });
                     messageDiv.appendChild(document.createElement("hr"));
-                    document.body.appendChild(messageDiv)
+                    this._getMsgContainer().appendChild(messageDiv)
+                },
+                _getMsgContainer() {
+                    let msgContainer = document.getElementById("msgContainer");
+                    if (!msgContainer) {
+                        msgContainer = document.createElement("div");
+                        msgContainer.id = "msgContainer";
+                        msgContainer.style.textAlign = "left";
+                        // 将日志信息放在最后一个 class="markdown-body" 的 div 的后面
+                        const divs = document.querySelectorAll("div.markdown-body");
+                        const lastDiv = divs.length > 0 ? divs[divs.length - 1] : null;
+                        if (lastDiv) {
+                            lastDiv.parentNode.appendChild(msgContainer);
+                        }
+                    }
+                    return msgContainer
                 },
                 clearLogDiv() {
-                    document.querySelectorAll(".my-message-div").forEach(div => div.remove());
+                    const msgContainer = document.getElementById("msgContainer");
+                    if (msgContainer) {
+                        msgContainer.innerHTML = "";
+                    }
                 }
             };
             DivLog.LOG_LEVEL = config_logLevel;
         }
         DivLog.clearLogDiv();
 
+        // 隐藏特殊片段
         if (typeof Censor === 'undefined') {
             const ANKI_CODE_REGEXP = /<code[^>]*>([\s\S]*?)<\/code>/g;
-            const ANKI_CODE_REPLACE = "##ANKI_CODE_REPLACE##";
+            const ANKI_CODE_REPLACE = "ANKI_CODE_REPLACE";
+            const ANKI_MJX_REGEXP = /<mjx-container[^>]*>([\s\S]*?)<\/mjx-container>/g;
+            const ANKI_MJX_REPLACE = "ANKI_MJX_CONTAINER_REPLACE";
             window.Censor = {
-                censorCodeHtml: function (note_text) {
+                censorCodeTag: function (note_text) {
                     return this._censor(note_text, ANKI_CODE_REGEXP, ANKI_CODE_REPLACE)
                 },
-                decensorCodeHtml: function (note_text, replacements) {
+                censorMJXTag: function (note_text) {
+                    return this._censor(note_text, ANKI_MJX_REGEXP, ANKI_MJX_REPLACE)
+                },
+                decensorCodeTag: function (note_text, replacements) {
                     return this._decensor(note_text, ANKI_CODE_REPLACE, replacements)
+                },
+                decensorMJXTag: function (note_text, replacements) {
+                    return this._decensor(note_text, ANKI_MJX_REPLACE, replacements)
                 },
                 _censor: function (note_text, regexp, mask) {
                     /*Take note_text and replace every match of regexp with mask, simultaneously adding it to a string array*/
@@ -215,6 +247,4 @@
             }
         }
     }
-
-
 </script>
