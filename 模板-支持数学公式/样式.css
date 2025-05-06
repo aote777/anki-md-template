@@ -11,12 +11,16 @@
     padding: 16px;
     font-size: 20px;
     text-align: left; /* left-左对齐，center-居中对齐 */
-    opacity: 0; /* 设置透明度为0，代码执行完后更新为1 */
+}
+
+.md-content {
+    opacity: 0;
 }
 
 /* 代码块自动换行，方便手机端查看代码 */
 pre code[class*="language-"] {
     white-space: pre-wrap;
+    font-size: 16px;
 }
 
 .katex {
