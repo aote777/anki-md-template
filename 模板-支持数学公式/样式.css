@@ -1,30 +1,27 @@
 @import url('https://gcore.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown.min.css');
 @import url('https://gcore.jsdelivr.net/npm/highlight.js@11.11.1/styles/night-owl.min.css');
-@import url('https://gcore.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css');
-@import url('https://gcore.jsdelivr.net/npm/markdown-it-texmath@1.0.0/css/texmath.min.css');
 @import url('https://gcore.jsdelivr.net/npm/normalize.css@8.0.1/normalize.min.css');
 
 .markdown-body {
     box-sizing: border-box;
-    min-width: 200px;
     margin: 0 auto;
     padding: 16px;
     font-size: 20px;
     text-align: left; /* left-左对齐，center-居中对齐 */
 }
 
-.md-content {
-    opacity: 0;
+#qa {
+    visibility: hidden !important;
+}
+
+#qa.qa-visible {
+    visibility: visible !important;
 }
 
 /* 代码块自动换行，方便手机端查看代码 */
 pre code[class*="language-"] {
     white-space: pre-wrap;
     font-size: 16px;
-}
-
-.katex {
-    font-size: 1.18em !important; /* 放大公式显示，与 Anki 解析的公式一样大 */
 }
 
 /* Anki 似乎不支持 prefers-color-scheme，换一种方式设置暗黑模式 */
