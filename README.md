@@ -6,8 +6,6 @@
 > 核心markdown解析器 👉[markdown-it](https://github.com/markdown-it/markdown-it)
 > `https://github.com/markdown-it/markdown-it`
 
-> **核心代码在`demo.html`中** > **不想手动创建模板,可以直接导入我上传好的牌组(./markdown.apkg),就会自动导入卡片模板了**
-
 
 👇 目前的功能（有什么改进可以在 issue 里提 有能力可以自行修改提 pr,喜欢的兄弟姐妹们可以点个star支持一下）
 
@@ -38,7 +36,7 @@
 
 ---
 
-**cdn 仓库(~~慢的可以自己换成国内的 cdn 仓库~~换成字节的 cdn 库了国内速度挺快)**
+**cdn 仓库(请勿继续使用字节cdn 已倒闭)**
 
 ****
 
@@ -55,3 +53,7 @@
 2. 背面内容模板 完整复制仓库 `./卡片北面面内容模板.txt` 的内容
 
 3. 样式 完整复制仓库`./卡片样式.css` 文件的内容
+
+#### 开发调试
+使用 `./card-demo-dev-test.html` 开启live server 浏览器中调试
+在anki 卡片模板预览中 实时调试
