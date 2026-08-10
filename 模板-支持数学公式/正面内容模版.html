@@ -194,13 +194,30 @@
             linkify: true,
             breaks: true,
             highlight: function (str, lang) {
+                // 处理代码块挖空 {{c1::text}}
+                let clozes = [];
+                str = str.replace(/\{\{c(\d+)::([^}]+)\}\}/g, (match, num, text) => {
+                    clozes.push({num, text});
+                    return `CLOZE_PLACEHOLDER_${clozes.length - 1}`;
+                });
+
+                let highlighted = '';
                 if (lang && hljs.getLanguage(lang)) {
                     try {
-                        return hljs.highlight(str, {language: lang}).value
+                        highlighted = hljs.highlight(str, {language: lang}).value
                     } catch (__) {
                     }
+                } else {
+                    highlighted = str.replace(/</g, '&lt;').replace(/>/g, '&gt;');
                 }
-                return '';
+
+                // 还原挖空为输入框
+                highlighted = highlighted.replace(/CLOZE_PLACEHOLDER_(\d+)/g, (match, idx) => {
+                    const c = clozes[idx];
+                    return `<input type="text" class="cloze-blank" value="${c.text.replace(/"/g, '&quot;')}" />`;
+                });
+
+                return highlighted;
             }
         });
     }
